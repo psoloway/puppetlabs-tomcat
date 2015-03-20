@@ -5,6 +5,7 @@
 1. [Overview](#overview)
 2. [Module Description - What the module does and why it is useful](#module-description)
 3. [Setup - The basics of getting started with tomcat](#setup)
+    * [Setup requirements](#setup-requirements)
     * [Beginning with tomcat](#beginning-with-tomcat)
 4. [Usage - Configuration options and additional functionality](#usage)
     * [I want to install Tomcat from a specific source.](#i-want-to-install-tomcat-from-a-specific-source)
@@ -12,53 +13,40 @@
     * [I want to deploy WAR files.](#i-want-to-deploy-are-files)
 5. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
     * [Classes](#classes)
-    * [Defined Types](#defined-types)
+    * [Defines](#defined-types)
     * [Parameters](#parameters)
-        - [tomcat](#tomcat-1)
-        - [tomcat::config::server](#tomcatconfigserver)
-        - [tomcat::config::server::connector](#tomcatconfigserverconnector)
-        - [tomcat::config::server::context](#tomcatconfigservercontext)
-        - [tomcat::config::server::engine](#tomcatconfigserverengine)
-        - [tomcat::config::server::host](#tomcatconfigserverhost)
-        - [tomcat::config::server::listener](#tomcatconfigserverlistener)
-        - [tomcat::config::server::realm](#tomcatconfigserverrealm)
-        - [tomcat::config::server::service](#tomcatconfigserverservice)
-        - [tomcat::config::server::tomcat_users](#tomcatconfigservertomcat_users)
-        - [tomcat::config::server::valve](#tomcatconfigservervalve)
-        - [tomcat::instance](#tomcatinstance)
-        - [tomcat::service](#tomcatservice)
-        - [tomcat::setenv::entry](#tomcatsetenventry)
-        - [tomcat::war](#tomcatwar)
 6. [Limitations - OS compatibility, etc.](#limitations)
 7. [Development - Guide for contributing to the module](#development)
-    * [Contributing](#contributing)
-    * [Tests](#running-tests)
 
 ##Overview
 
-The tomcat module enables you to install, deploy, and configure Tomcat web services.
+The tomcat module lets you use Puppet to install, deploy, and configure Tomcat web services.
 
 ##Module Description
 
-Tomcat is a Java web service provider. The Puppet Labs module gives you a way to install multiple versions of Tomcat, as well as multiple copies of a version, and deploy web apps to it. The tomcat module also manages the Tomcat configuration file with Puppet.
+Tomcat is a Java Web service provider. The Puppet Labs module gives you a way to install multiple versions of Tomcat, as well as multiple copies of a version, and deploy web apps to it. The tomcat module also manages the Tomcat configuration file with Puppet.
 
 ##Setup
 
-**NOTE: You must have Java installed in order to use this module. The version of Java needed will depend on the version of Tomcat you are installing. Older versions of Tomcat require >=java6, while the latest version of Tomcat needs >=java7.**
+###Setup requirements
 
-###Stdlib
+####Java
 
-This module requires puppetlabs-stdlib >= 4.0. On Puppet Enterprise, this upgrade must be completed manually before this module can be installed. To update stdlib, run:
+You must have Java installed to use the tomcat module. Older versions of Tomcat require Java 6 or newer. The latest version of Tomcat needs Java 7 or newer.
 
-```
+####Stdlib
+
+The tomcat module requires puppetlabs-stdlib version 4.0 or newer. On Puppet Enterprise, you must meet this requirement before installing the module. To update stdlib, run:
+
+~~~
 puppet module upgrade puppetlabs-stdlib
-```
+~~~
 
 ###Beginning with tomcat
 
 The simplest way to get Tomcat up and running with the tomcat module is to install the Tomcat package from EPEL,
 
-```puppet
+~~~
 class { 'tomcat':
   install_from_source => false,
 }
@@ -66,36 +54,36 @@ class { 'epel': }->
 tomcat::instance{ 'default':
   package_name        => 'tomcat',
 }->
-```
+~~~
 
 and then start the service.
 
-```puppet
+~~~
 tomcat::service { 'default':
   use_jsvc     => false,
   use_init     => true,
   service_name => 'tomcat',
 }
-```
+~~~
 
 ##Usage
 
-###I want to install Tomcat from a specific source.
+###I want to install Tomcat from a specific source
 
 To download Tomcat from a specific source and then start the service,
 
-```puppet
+~~~
 class { 'tomcat': }
 class { 'java': }
 tomcat::instance { 'test':
   source_url => 'http://mirror.nexcess.net/apache/tomcat/tomcat-8/v8.0.8/bin/apache-tomcat-8.0.8.tar.gz'
 }->
 tomcat::service { 'default': }
-```
+~~~
 
-###I want to run multiple copies of Tomcat on a single node.
+###I want to run multiple copies of Tomcat on a single node
 
-```puppet
+~~~
 class { 'tomcat': }
 class { 'java': }
 
@@ -133,27 +121,27 @@ tomcat::config::server::connector { 'tomcat6-ajp':
 }->
 tomcat::service { 'tomcat6':
   catalina_base => '/opt/apache-tomcat/tomcat6'
-```
+~~~
 
-###I want to deploy WAR files.
+###I want to deploy WAR files
 
-The name of the WAR must end with '.war'.
+The name of the WAR file must end with '.war'.
 
-```puppet
+~~~
 tomcat::war { 'sample.war':
         catalina_base => '/opt/apache-tomcat/tomcat8',
         war_source => '/opt/apache-tomcat/tomcat8/webapps/docs/appdev/sample/sample.war',
       }
-```
-The `war_source` can be a local file, puppet:/// file, http, or ftp.
+~~~
+The `war_source` can be a local path, or a puppet:///, http, or ftp URL.
 
 ###I want to change my configuration
 
-Tomcat will not restart if its configuration changes unless you provide a `notify`.
+Tomcat does not restart if its configuration changes, unless you provide a `notify`.
 
-For instance, to remove a connector, you would start with a manifest like this:
+To remove a connector, for instance, start with a manifest like this:
 
-```puppet
+~~~
 tomcat::config::server::connector { 'tomcat8-jsvc':
         catalina_base         => '/opt/apache-tomcat/tomcat8-jsvc',
         port                  => '80',
@@ -163,11 +151,11 @@ tomcat::config::server::connector { 'tomcat8-jsvc':
         },
         connector_ensure => 'present'
 }
-```
+~~~
 
-Then you would set `connector_ensure` to 'absent', and provide `notify` for the service.
+Then set `connector_ensure` to 'absent', and provide `notify` for the service.
 
-```puppet
+~~~
 tomcat::config::server::connector { 'tomcat8-jsvc':
         catalina_base         => '/opt/apache-tomcat/tomcat8-jsvc',
         port                  => '80',
@@ -178,7 +166,7 @@ tomcat::config::server::connector { 'tomcat8-jsvc':
         connector_ensure => 'present'
         notify => Tomcat::Service['jsvc-default'],
 }
-```
+~~~
 
 ##Reference
 
@@ -192,9 +180,9 @@ tomcat::config::server::connector { 'tomcat8-jsvc':
 
 * `tomcat::params`: Manages Tomcat parameters.
 
-###Defined Types
+###Defines
 
-####Public Defined Types
+####Public Defines
 
 * `tomcat::config::server`: Configures attributes for the [Server](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html) element in $CATALINA_BASE/conf/server.xml.
 * `tomcat::config::server::connector`: Configures [Connector](http://tomcat.apache.org/tomcat-8.0-doc/connectors.html) elements in $CATALINA_BASE/conf/server.xml.
@@ -211,7 +199,7 @@ tomcat::config::server::connector { 'tomcat8-jsvc':
 * `tomcat::setenv::entry`: Adds an entry to the configuration file (ie. setenv.sh, /etc/sysconfig/tomcat, ...).
 * `tomcat::war`:  Manages the deployment of WAR files.
 
-####Private Defined Types
+####Private Defines
 
 * `tomcat::instance::package`: Installs Tomcat from a package.
 * `tomcat::instance::source`: Installs Tomcat from source.
@@ -240,7 +228,7 @@ Specifies whether or not to install from source. A Boolean that defaults to 'tru
 
 Specifies whether or not to purge existing Connector elements from server.xml.
 
-For example, if you specify an HTTP connector element using ```tomcat::config::server::connector``` and ```purge_connectors``` is set to ```true``` then existing HTTP connectors will be removed and only the HTTP connector you have specified will remain once the module has been applied.
+For example, if you specify an HTTP connector element using `tomcat::config::server::connector` and `purge_connectors` is set to `true` then existing HTTP connectors will be removed and only the HTTP connector you have specified will remain once the module has been applied.
 
 This is useful if you want to change the ports of existing connectors instead of adding additional connectors. Boolean that defaults to 'false'.
 
@@ -248,7 +236,7 @@ This is useful if you want to change the ports of existing connectors instead of
 
 Specifies whether or not to purge existing Realm elements from server.xml.
 
-For example, if you specify a Realm using ```tomcat::config::server::realm``` and ```purge_realms``` is set to ```true``` then existing Realm elements will be removed and only the Realm you have specified will remain once the module has been applied.
+For example, if you specify a Realm using `tomcat::config::server::realm` and `purge_realms` is set to `true` then existing Realm elements will be removed and only the Realm you have specified will remain once the module has been applied.
 
 Boolean that defaults to 'false'.
 
@@ -342,12 +330,12 @@ Specifies the Service XML element this Context should be nested beneath. Default
 
 #####`$parent_engine`
 
-Specifies which Engine element this Context should be nested beneath. Needs to be the `name` attribute for the Engine. Only valid if `$parent_host` is specified. 
+Specifies which Engine element this Context should be nested beneath. Needs to be the `name` attribute for the Engine. Only valid if `$parent_host` is specified.
 
 #####`$parent_host`
-Specifies the virtual host ([Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes) XML element) the Context should be nested beneath. Needs to be the `name` attribute for the Host. 
+Specifies the virtual host ([Host](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes) XML element) the Context should be nested beneath. Needs to be the `name` attribute for the Host.
 
-#####`$additional_attributes` 
+#####`$additional_attributes`
 
 Specifies any additional attributes to add to the Context. Should be a hash of the format 'attribute' => 'value'. This parameter is optional.
 
@@ -732,9 +720,9 @@ This module only supports Tomcat installations on \*nix systems.  The `tomcat::c
 
 This module requires puppetlabs-stdlib >= 4.2.0. On Puppet Enterprise, this upgrade must be completed manually before this module can be installed. To update stdlib, run:
 
-```
+~~~
 puppet module upgrade puppetlabs-stdlib
-```
+~~~
 
 ###Multiple Instances
 
@@ -760,4 +748,4 @@ Quickstart:
     bundle install
     bundle exec rake spec
     bundle exec rspec spec/acceptance
-    RS_DEBUG=yes bundle exec rspec spec/acceptance
+    RS_DEBUG=yes bundle exec rspec spec/acceptance<!--se_discussion_list:{"pABK3eoGcfxyTJ763GcRz2JQ":{"selectionStart":1471,"selectionEnd":1485,"commentList":[{"content":"What versions, specifically?"}],"discussionIndex":"pABK3eoGcfxyTJ763GcRz2JQ"},"tujPs5KIh8X2MdxMgLu7R9vy":{"selectionStart":7699,"selectionEnd":7700,"commentList":[{"content":"Should this be here, or is it just a formatting variation?"}],"discussionIndex":"tujPs5KIh8X2MdxMgLu7R9vy"}}-->
