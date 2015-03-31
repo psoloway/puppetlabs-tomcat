@@ -261,11 +261,11 @@ Specifies whether to purge any unmanaged Realm elements from the configuration f
 
 #####`manage_user`
 
-Determines whether to create the specified user if it doesn't exist. Uses Puppet's native [`user` resource type](https://docs.puppetlabs.com/references/latest/type.html#user) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
+Determines whether to create the specified user, if it doesn't exist. Uses Puppet's native [`user` resource type](https://docs.puppetlabs.com/references/latest/type.html#user) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
 
 #####`manage_group`
 
-Determines whether to create the specified group if it doesn't exist. Uses Puppet's native [`group` resource type](https://docs.puppetlabs.com/references/latest/type.html#group) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
+Determines whether to create the specified group, if it doesn't exist. Uses Puppet's native [`group` resource type](https://docs.puppetlabs.com/references/latest/type.html#group) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
 
 ####tomcat::config::server
 
@@ -389,7 +389,7 @@ Specifies whether the [className XML attribute](http://tomcat.apache.org/tomcat-
 
 #####`engine_name`
 
-Specifies the logical name of the Engine as it should appear in log and error messages. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes). Valid options: a string. Default: the '[name]' passed in your define.
+Specifies the logical name of the Engine, used in log and error messages. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes). Valid options: a string. Default: the '[name]' passed in your define.
 
 #####`jvm_route`
 
@@ -427,7 +427,7 @@ Specifies whether the virtual host (the [Host XML element](http://tomcat.apache.
 
 #####`host_name`
 
-Specifies the network name of the virtual host as registered on your DNS server. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes).  Valid options: a string. Default: the '[name]' passed in your define.
+Specifies the network name of the virtual host, as registered on your DNS server. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes).  Valid options: a string. Default: the '[name]' passed in your define.
 
 #####`parent_service`
 
@@ -642,11 +642,11 @@ Specifies whether to use Jsvc for service management. If both `use_jsvc` and `us
  * `$CATALINA_BASE/bin/catalina.sh start`
  * `$CATALINA_BASE/bin/catalina.sh stop`
 
- Valid options: 'true' and 'false'. Default: 'false'.
+Valid options: 'true' and 'false'. Default: 'false'.
 
 #####`java_home`
 
-Specifies where Java is installed. Only applies if `use_jsvc` is set to 'true'. Valid options: a string containing an absolute path. Default: undef.
+Specifies where Java is installed. Only applies if `use_jsvc` is set to 'true'. Valid options: a string containing an absolute path. Default: If you don't specify a home path, Puppet does not pass the `-home` switch to Tomcat. That causes problems on some systems, so we recommend including this parameter..
 
 #####`service_ensure`
 
@@ -663,7 +663,7 @@ Specifies whether to use a package-provided init script for service management. 
  * `$CATALINA_BASE/bin/catalina.sh start`
  * `$CATALINA_BASE/bin/catalina.sh stop`
 
- Valid options: 'true' and 'false'. Default: 'false'.
+Valid options: 'true' and 'false'. Default: 'false'.
 
 #####`service_name`
 
@@ -671,11 +671,11 @@ Specifies whether to use a package-provided init script for service management. 
 
 #####`start_command`
 
-Designates a command to start the service. Valid options: a string. Default: based on other settings.
+Designates a command to start the service. Valid options: a string. Default: determined by the values of `use_init` and `use_jsvc`.
 
 #####`stop_command`
 
-Designates a command to stop the service. Valid options: a string. Default: based on other settings.
+Designates a command to stop the service. Valid options: a string. Default: determined by the values of `use_init` and `use_jsvc`.
 
 ####tomcat::setenv::entry
 
@@ -685,7 +685,7 @@ Designates a command to stop the service. Valid options: a string. Default: base
 
 #####`ensure`
 
-Determines whether the fragment should exist in the configuration file. Valid options: 'present' and 'absent'. Default: 'present'.
+Determines whether the fragment should exist in the configuration file. Valid options: 'present', 'absent'. Default: 'present'.
 
 #####`config_file`
 
@@ -715,11 +715,11 @@ Specifies the base directory of the Tomcat installation. Valid options: a string
 
 #####`app_base`
 
-Specifies where to deploy the WAR. Cannot be used in combination with `deployment_path`. Valid options: a string containing a path relative to $CATALINA_BASE. Default: 'webapps'.
+Specifies where to deploy the WAR. Cannot be used in combination with `deployment_path`. Valid options: a string containing a path relative to $CATALINA_BASE. Default: If you don't specify an `app_base`, Puppet deploys the WAR to your specified `deployment_path`. If you don't specify that either, the WAR deploys to '${catalina_base}/webapps'.
 
 #####`deployment_path`
 
-Specifies where to deploy the WAR. Cannot be used in combination with `app_base`. Valid options: a string containing an absolute path. Default: undef.
+Specifies where to deploy the WAR. Cannot be used in combination with `app_base`. Valid options: a string containing an absolute path. Default: If you don't specify a `deployment_path`, Puppet deploys the WAR to your specified `app_base`. If you don't specify that either, the WAR deploys to '${catalina_base}/webapps'.
 
 #####`war_ensure`
 
