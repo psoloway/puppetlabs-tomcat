@@ -283,7 +283,7 @@ Specifies whether the [className XML attribute](http://tomcat.apache.org/tomcat-
 
 #####`address`
 
-Specifies a TCP/IP address to listen on for the shutdown command. Maps to the [address XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html#Common_Attributes). Valid options: a string. Default: undef.
+Specifies a TCP/IP address on which to listen for the shutdown command. Maps to the [address XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html#Common_Attributes). Valid options: a string. Default: undef.
 
 #####`address_ensure`
 
@@ -291,11 +291,11 @@ Specifies whether the [address XML attribute](http://tomcat.apache.org/tomcat-8.
 
 #####`port`
 
-Specifies a port to listen on for the designated shutdown command. Maps to the [port XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html#Common_Attributes). Valid options: a string containing a port number. Default: undef.
+Specifies a port on which to listen for the designated shutdown command. Maps to the [port XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html#Common_Attributes). Valid options: a string containing a port number. Default: undef.
 
 #####`shutdown`
 
-Designates a command to shut down Tomcat when received through the specified address and port. Maps to the [shutdown XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html#Common_Attributes) Valid options: a string. Default: undef.
+Designates a command that shuts down Tomcat when the command is received through the specified address and port. Maps to the [shutdown XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/server.html#Common_Attributes) Valid options: a string. Default: undef.
 
 ####tomcat::config::server::connector
 
@@ -309,7 +309,7 @@ Specifies whether the [Connector XML element](http://tomcat.apache.org/tomcat-8.
 
 #####`port`
 
-*Required unless `connector_ensure` is set to 'false'.* Sets a TCP port to create a server socket on. Maps to the [port XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#Common_Attributes). Valid options: a string.
+*Required if `connector_ensure` is set to 'true' or 'present'.* Sets a TCP port on which to create a server socket. Maps to the [port XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/http.html#Common_Attributes). Valid options: a string.
 
 #####`protocol`
 
@@ -393,7 +393,7 @@ Specifies the logical name of the Engine, used in log and error messages. Maps t
 
 #####`jvm_route`
 
-Specifies an identifier to be used in load balancing scenarios to enable session affinity. Maps to the [jvmRoute XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes). Valid options: string. Default: undef.
+Specifies an identifier to enable session affinity in load balancing. Maps to the [jvmRoute XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes). Valid options: string. Default: undef.
 
 #####`jvm_route_ensure`
 
@@ -585,7 +585,7 @@ Specifies which Service element the Valve should nest under. Valid options: a st
 
 #####`valve_ensure`
 
-Specifies whether the valve should exist in the configuration file. Maps to the  [Valve XML element](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Introduction). Valid options: 'true', 'false', 'present', and 'absent'. Default: 'present'.
+Specifies whether the Valve should exist in the configuration file. Maps to the  [Valve XML element](http://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Introduction). Valid options: 'true', 'false', 'present', and 'absent'. Default: 'present'.
 
 #####`additional_attributes`
 
@@ -615,7 +615,7 @@ Specifies whether to install from source. If set to 'false', installation is dri
 
 #####`source_strip_first_dir`
 
-Specifies whether to strip the topmost directory of the tarball contents when unpacking it. Only valid if `install_from_source` is set to 'true'. Valid options: 'true' and 'false'. Default: 'true'.
+Specifies whether to strip the topmost directory of the tarball when unpacking it. Only valid if `install_from_source` is set to 'true'. Valid options: 'true' and 'false'. Default: 'true'.
 
 #####`package_ensure`
 
@@ -646,7 +646,7 @@ Valid options: 'true' and 'false'. Default: 'false'.
 
 #####`java_home`
 
-Specifies where Java is installed. Only applies if `use_jsvc` is set to 'true'. Valid options: a string containing an absolute path. Default: If you don't specify a home path, Puppet does not pass the `-home` switch to Tomcat. That causes problems on some systems, so we recommend including this parameter..
+Specifies where Java is installed. Only applies if `use_jsvc` is set to 'true'. Valid options: a string containing an absolute path. Default: undef. Note: if you don't specify a home path in this parameter, Puppet does not pass the `-home` switch to Tomcat. That can cause problems on some systems, so we recommend including this parameter.
 
 #####`service_ensure`
 
@@ -667,7 +667,7 @@ Valid options: 'true' and 'false'. Default: 'false'.
 
 #####`service_name`
 
-*Required if use_init is true.* Specifies the name of the Tomcat service. Valid options: a string.
+*Required if `use_init` is set to 'true'.* Specifies the name of the Tomcat service. Valid options: a string.
 
 #####`start_command`
 
@@ -741,7 +741,7 @@ Specifies whether to purge the exploded WAR directory. Only applicable when `war
 
 ##Limitations
 
-This module only supports Tomcat installations on \*nix systems.  The `tomcat::config::server*` defines require augeas version 1.0.0 or newer.
+This module only supports Tomcat installations on \*nix systems.  The `tomcat::config::server*` defines require Augeas version 1.0.0 or newer.
 
 ###Multiple Instances
 
@@ -761,7 +761,7 @@ To see who's already involved, see the [list of contributors.](https://github.co
 
 ###Running tests
 
-This project contains tests for both [rspec-puppet](http://rspec-puppet.com/) and [beaker-rspec](https://github.com/puppetlabs/beaker-rspec) to verify functionality. For in-depth information please see their respective documentation.
+This project contains tests for both [rspec-puppet](http://rspec-puppet.com/) and [beaker-rspec](https://github.com/puppetlabs/beaker-rspec) to verify functionality. For in-depth information, please see their respective documentation.
 
 Quickstart:
 
