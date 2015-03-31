@@ -145,11 +145,11 @@ tomcat::war { 'sample.war':
 
 The name of the WAR file must end with '.war'.
 
-The `war_source` can be a local path, or a `puppet:///`, `http://`, or `ftp://` URL.
+The `war_source` can be a local path or a `puppet:///`, `http://`, or `ftp://` URL.
 
 ###I want to change my configuration
 
-Tomcat does not restart if you update its configuration, unless you supply a [`notify` metaparameter](https://docs.puppetlabs.com/learning/ordering.html#notify-and-subscribe).
+Tomcat does not restart after you update its configuration, unless you supply a [`notify` metaparameter](https://docs.puppetlabs.com/learning/ordering.html#notify-and-subscribe).
 
 To remove a connector, for instance, start with a manifest like this:
 
@@ -165,7 +165,7 @@ tomcat::config::server::connector { 'tomcat8-jsvc':
 }
 ~~~
 
-Then set `connector_ensure` to 'absent', and set `notify` to the service resource:
+Then set `connector_ensure` to 'absent' and set `notify` to the service resource:
 
 ~~~
 tomcat::config::server::connector { 'tomcat8-jsvc':
@@ -231,7 +231,7 @@ Puppet removes any existing Connectors or Realms and leaves only the ones you've
 
 ###Parameters
 
-All parameters are optional, except where otherwise noted.
+All parameters are optional except where otherwise noted.
 
 ####tomcat
 
@@ -261,11 +261,11 @@ Specifies whether to purge any unmanaged Realm elements from the configuration f
 
 #####`manage_user`
 
-Determines whether to create the specified user, if it doesn't exist. Uses Puppet's native [`user` resource type](https://docs.puppetlabs.com/references/latest/type.html#user) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
+Determines whether to create the specified user if it doesn't exist. Uses Puppet's native [`user` resource type](https://docs.puppetlabs.com/references/latest/type.html#user) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
 
 #####`manage_group`
 
-Determines whether to create the specified group, if it doesn't exist. Uses Puppet's native [`group` resource type](https://docs.puppetlabs.com/references/latest/type.html#group) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
+Determines whether to create the specified group if it doesn't exist. Uses Puppet's native [`group` resource type](https://docs.puppetlabs.com/references/latest/type.html#group) with default parameters. Valid options: 'true' and 'false'. Default: 'true'.
 
 ####tomcat::config::server
 
@@ -389,7 +389,7 @@ Specifies whether the [className XML attribute](http://tomcat.apache.org/tomcat-
 
 #####`engine_name`
 
-Specifies the logical name of the Engine, used in log and error messages. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes). Valid options: a string. Default: the '[name]' passed in your define.
+Specifies the logical name of the Engine as it should appear in log and error messages. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/engine.html#Common_Attributes). Valid options: a string. Default: the '[name]' passed in your define.
 
 #####`jvm_route`
 
@@ -427,7 +427,7 @@ Specifies whether the virtual host (the [Host XML element](http://tomcat.apache.
 
 #####`host_name`
 
-Specifies the network name of the virtual host, as registered on your DNS server. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes).  Valid options: a string. Default: the '[name]' passed in your define.
+Specifies the network name of the virtual host as registered on your DNS server. Maps to the [name XML attribute](http://tomcat.apache.org/tomcat-8.0-doc/config/host.html#Common_Attributes).  Valid options: a string. Default: the '[name]' passed in your define.
 
 #####`parent_service`
 
@@ -685,7 +685,7 @@ Designates a command to stop the service. Valid options: a string. Default: base
 
 #####`ensure`
 
-Determines whether the fragment should exist in the configuration file. Valid options: 'present', 'absent'. Default: 'present'.
+Determines whether the fragment should exist in the configuration file. Valid options: 'present' and 'absent'. Default: 'present'.
 
 #####`config_file`
 
